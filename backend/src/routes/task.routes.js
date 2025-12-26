@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyJWT } from "../middlewares/auth.middleware";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {getAllTaskByParticularUser,createTask,updateTask,deleteTask} from "../controllers/task.controllers.js"
 
 const router = Router()
