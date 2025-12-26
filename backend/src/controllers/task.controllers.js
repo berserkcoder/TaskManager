@@ -144,4 +144,32 @@ const deleteTask = asyncHandler(async(req,res) => {
     ))
 })
 
-export {getAllTaskByParticularUser,createTask,updateTask,deleteTask}
+const toggleCompletion = asyncHandler(async(req,res) => {
+    /*
+    -> get taskId from req.params
+    -> get 
+    -> fetch task from the database 
+    -> if task doesnot exist throw error
+    -> check isCompleted status and flip it 
+    -> return res
+    */
+   const taskId = req.params.id
+   const owner = req.user._id
+   if (!mongoose.Types.ObjectId.isValid(taskId)) {
+        throw new ApiError(400, "Invalid task ID");
+    }
+    const task = await Task.findOne({
+        _id: taskId,
+        owner
+    })
+
+    if(!task) {
+        throw new ApiError(404,"Task Not Found")
+    }
+
+    task.isCompleted = !task.isCompleted
+    await task.save({validateBeforeSave: false})
+    return res.status(200).json(new ApiResponse(200,task,"task status toggled successfully"))
+})
+
+export {getAllTaskByParticularUser,createTask,updateTask,deleteTask,toggleCompletion}
